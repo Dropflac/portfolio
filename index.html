@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Артур Дудуркаев</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Портфолио: сайты, Telegram-боты и автоматизация для малого бизнеса.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout concept: сдержанная визитка в бумажно-чернильной гамме с одним кобальтовым акцентом.
+   Яркими остаются только превью работ: у каждого свой цвет проекта. */
+:root {
+  --bg: #F6F6F3;
+  --surface: #FFFFFF;
+  --fg: #0F1115;
+  --muted: #565B66;
+  --line: #D9DAD5;
+  --accent: #2547F5;
+  --accent-fg: #FFFFFF;
+  --ok: #1F7A4D;
+  --display: "Geologica", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --body: "Geologica", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1013; --surface: #16191E; --fg: #ECEEF2; --muted: #9AA1AE; --line: #262A31;
+    --accent: #8CA0FF; --accent-fg: #0E1013; --ok: #5BC08A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1013; --surface: #16191E; --fg: #ECEEF2; --muted: #9AA1AE; --line: #262A31;
+  --accent: #8CA0FF; --accent-fg: #0E1013; --ok: #5BC08A;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: auto; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 400 1rem/1.65 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 28px;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1040px; margin: 0 auto; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.mono { font-family: var(--mono); }
+.label { font: 500 .75rem/1.3 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+
+.top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px 24px; padding-block: 22px; }
+.brand { font: 700 1rem/1 var(--display); text-decoration: none; letter-spacing: .02em; }
+.brand span { color: var(--muted); font-weight: 400; }
+.top nav { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: .9375rem; }
+.top nav a { text-decoration: none; padding-block: 4px; border-bottom: 1px solid transparent; }
+.top nav a:hover { border-color: var(--accent); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 24px;
+  border-radius: 8px; border: 1px solid var(--fg); background: transparent; color: var(--fg);
+  font: 500 .9375rem/1 var(--body); text-decoration: none; cursor: pointer;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+.btn.primary:hover { filter: brightness(1.1); color: var(--accent-fg); }
+
+.hero { padding-block: clamp(36px, 8vw, 104px) clamp(44px, 8vw, 96px); max-width: 860px; }
+.hero h1 { font: 800 clamp(2.2rem, 6.6vw, 4.4rem)/1.02 var(--display); letter-spacing: -.025em; margin-top: 18px; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero .lead { margin-top: 24px; max-width: 54ch; font-size: 1.1875rem; color: var(--muted); }
+.hero .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+
+section { border-top: 1px solid var(--line); padding-block: clamp(40px, 7vw, 80px); }
+.sec-head { display: grid; gap: 10px; margin-bottom: clamp(24px, 4vw, 40px); max-width: 64ch; }
+.sec-head h2 { font: 700 clamp(1.5rem, 3.6vw, 2.2rem)/1.15 var(--display); letter-spacing: -.01em; }
+.sec-head p { color: var(--muted); }
+
+/* услуги */
+.services { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.service { padding: 0 28px; border-left: 1px solid var(--line); display: grid; gap: 12px; align-content: start; }
+.service:first-child { padding-left: 0; border-left: 0; }
+.service:last-child { padding-right: 0; }
+.service h3 { font: 700 1.25rem/1.25 var(--display); }
+.service p { color: var(--muted); font-size: .9375rem; }
+.service ul { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 6px; font: 400 .8125rem/1.45 var(--mono); color: var(--muted); }
+.service li::before { content: "→ "; color: var(--accent); }
+.also { margin-top: 36px; padding-top: 20px; border-top: 1px dotted var(--line); color: var(--muted); font-size: .9375rem; }
+.also b { color: var(--fg); font-weight: 500; }
+
+/* работы */
+.works { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 32px; }
+.work { display: grid; gap: 16px; align-content: start; }
+.thumb { aspect-ratio: 16 / 10; border-radius: 10px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; position: relative; border: 1px solid var(--line); }
+.thumb .t { font: 800 clamp(1.4rem, 3.4vw, 2rem)/1.05 var(--display); letter-spacing: -.01em; position: relative; }
+.thumb .s { font: 500 .75rem/1.3 var(--mono); letter-spacing: .1em; text-transform: uppercase; position: relative; opacity: .85; }
+.th-barber { background: #0F1B24; color: #E7EEF2; }
+.th-barber::after { content: ""; position: absolute; right: 22px; top: 0; bottom: 0; width: 34px; background: repeating-linear-gradient(-45deg, #E04A40 0 12px, #E9EFF2 12px 24px, #4C86B0 24px 36px, #E9EFF2 36px 48px); opacity: .95; }
+.th-clean { background: #F2D13B; color: #10261F; }
+.th-clean::after { content: ""; position: absolute; right: -30px; bottom: -30px; width: 150px; height: 150px; border-radius: 50%; background: #1D6B50; }
+.th-cafe { background: #F2A61D; color: #2A1608; }
+.th-cafe::after { content: ""; position: absolute; right: 20px; top: 50%; width: 112px; height: 112px; margin-top: -56px; border-radius: 50%; background: #2A1608; }
+.th-bot { background: #1C2128; color: #ECEEF2; }
+.th-bot::before { content: ""; position: absolute; right: 22px; top: 22px; width: 120px; height: 34px; border-radius: 14px 14px 14px 3px; background: #3D4654; }
+.th-bot::after { content: ""; position: absolute; right: 22px; top: 66px; width: 90px; height: 34px; border-radius: 14px 14px 3px 14px; background: #8CA0FF; }
+.work h3 { font: 700 1.25rem/1.25 var(--display); }
+.work p { color: var(--muted); font-size: .9375rem; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px 14px; font: 400 .75rem/1.4 var(--mono); color: var(--muted); }
+.work .go { font-weight: 500; text-decoration: none; border-bottom: 1px solid var(--accent); width: fit-content; padding-bottom: 2px; }
+.work .go:hover { color: var(--accent); }
+.disclaimer { margin-top: 36px; padding-top: 18px; border-top: 1px dotted var(--line); font-size: .875rem; color: var(--muted); max-width: 70ch; }
+
+/* порядок работы */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; counter-reset: s; }
+.steps li { counter-increment: s; display: grid; gap: 8px; align-content: start; }
+.steps li::before { content: counter(s, decimal-leading-zero); font: 500 .875rem/1 var(--mono); color: var(--accent); }
+.steps h3 { font: 700 1.0625rem/1.3 var(--display); }
+.steps p { color: var(--muted); font-size: .9375rem; }
+
+/* контакты */
+.contact { display: grid; gap: 22px; max-width: 700px; }
+.contact h2 { font: 800 clamp(1.8rem, 5vw, 3rem)/1.08 var(--display); letter-spacing: -.02em; }
+.mailrow { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
+.mail { font: 500 clamp(1.1rem, 3.6vw, 1.625rem)/1.3 var(--mono); user-select: all; overflow-wrap: anywhere; border-bottom: 2px solid var(--accent); padding-bottom: 2px; }
+.copied { font: 500 .875rem/1 var(--mono); color: var(--ok); min-height: 1em; }
+.contact p { color: var(--muted); }
+footer { border-top: 1px solid var(--line); padding-block: 22px 6px; font: 400 .8125rem/1.5 var(--mono); color: var(--muted); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 24px; }
+
+@media (max-width: 860px) {
+  .services { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .service, .service:first-child, .service:last-child { padding: 0; border-left: 0; }
+  .service + .service { border-top: 1px solid var(--line); padding-top: 24px; }
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .works { grid-template-columns: minmax(0, 1fr); }
+  .steps { grid-template-columns: minmax(0, 1fr); }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="#top">Артур Дудуркаев <span>/ Begelua</span></a>
+    <nav aria-label="Разделы">
+      <a href="#services">Услуги</a>
+      <a href="#works">Работы</a>
+      <a href="#process">Как работаю</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <div class="hero">
+      <p class="label">Новый Уренгой · работаю удалённо</p>
+      <h1>Сайты, Telegram-боты и <em>автоматизация</em> для малого бизнеса</h1>
+      <p class="lead">Делаю сайты, которые принимают заявки и заказы, и ботов, которые экономят время. Работаю по договорённости, без лишних слов и доплат.</p>
+      <div class="actions">
+        <a class="btn primary" href="#contact">Обсудить задачу</a>
+        <a class="btn" href="#works">Смотреть работы</a>
+      </div>
+    </div>
+
+    <section id="services" aria-labelledby="h-services">
+      <div class="sec-head">
+        <p class="label">Услуги</p>
+        <h2 id="h-services">Чем могу помочь</h2>
+      </div>
+      <div class="services">
+        <article class="service">
+          <h3>Сайты и лендинги</h3>
+          <p>Одностраничные сайты для услуг, кафе, салонов, мастеров. Адаптивные, с формой заявки и понятной структурой.</p>
+          <ul><li>онлайн-запись и калькуляторы</li><li>меню и заказ на вынос</li><li>запуск на вашем домене</li></ul>
+        </article>
+        <article class="service">
+          <h3>Telegram-боты</h3>
+          <p>Боты для записи, заказов и заявок. Клиент выбирает в чате, вы получаете уведомление и видите расписание.</p>
+          <ul><li>напоминания клиентам</li><li>команды администратора</li><li>Python, исходники ваши</li></ul>
+        </article>
+        <article class="service">
+          <h3>Автоматизация</h3>
+          <p>Убираю ручную рутину в таблицах: отчёты, напоминания о сроках, перенос данных между файлами.</p>
+          <ul><li>Excel и Google Таблицы</li><li>скрипты на Python</li><li>напоминания на почту</li></ul>
+        </article>
+      </div>
+      <p class="also"><b>Также:</b> наполнение и ведение интернет-магазинов: карточки товаров, остатки, заказы.</p>
+    </section>
+
+    <section id="works" aria-labelledby="h-works">
+      <div class="sec-head">
+        <p class="label">Работы</p>
+        <h2 id="h-works">Что я уже сделал</h2>
+        <p>Это демо-проекты на вымышленные компании. Так вы заранее видите, как будет выглядеть и работать ваш сайт или бот.</p>
+      </div>
+      <div class="works">
+        <article class="work">
+          <div class="thumb th-barber" aria-hidden="true"><span class="s">Лендинг · запись</span><span class="t">Барбершоп<br>«Северный»</span></div>
+          <h3>Барбершоп «Северный»</h3>
+          <p>Лендинг с прейскурантом и рабочей онлайн-записью: выбор услуги, дня и времени, расчёт свободных окон под длительность услуги.</p>
+          <p class="tags"><span>HTML / CSS / JS</span><span>адаптив</span><span>тёмная тема</span></p>
+          <a class="go" href="https://dropflac.github.io/portfolio/barbershop/" target="_blank" rel="noopener">Открыть демо →</a>
+        </article>
+        <article class="work">
+          <div class="thumb th-clean" aria-hidden="true"><span class="s">Лендинг · калькулятор</span><span class="t">Клининг<br>«Порядок»</span></div>
+          <h3>Клининг «Порядок»</h3>
+          <p>Лендинг с калькулятором: вид уборки, площадь, доп. услуги. Считает цену, размер бригады и время работы. Слайдер «до/после».</p>
+          <p class="tags"><span>HTML / CSS / JS</span><span>калькулятор</span><span>адаптив</span></p>
+          <a class="go" href="https://dropflac.github.io/portfolio/cleaning/" target="_blank" rel="noopener">Открыть демо →</a>
+        </article>
+        <article class="work">
+          <div class="thumb th-cafe" aria-hidden="true"><span class="s">Лендинг · заказ</span><span class="t">Кафе<br>«Тепло»</span></div>
+          <h3>Кафе «Тепло»</h3>
+          <p>Меню по разделам, корзина и заказ на вынос с выбором времени получения. Время и статус «открыто» считаются по часам работы.</p>
+          <p class="tags"><span>HTML / CSS / JS</span><span>корзина</span><span>адаптив</span></p>
+          <a class="go" href="https://dropflac.github.io/portfolio/cafe/" target="_blank" rel="noopener">Открыть демо →</a>
+        </article>
+        <article class="work">
+          <div class="thumb th-bot" aria-hidden="true"><span class="s">Telegram-бот</span><span class="t">Запись<br>в барбершоп</span></div>
+          <h3>Бот записи в барбершоп</h3>
+          <p>Клиент записывается в чате, получает напоминание за 2 часа и может отменить визит. Админ видит расписание и получает уведомления. Двойная запись исключена, логика покрыта тестами.</p>
+          <p class="tags"><span>Python</span><span>aiogram 3</span><span>SQLite</span><span>тесты</span></p>
+          <a class="go" href="https://github.com/Dropflac/barber-booking-bot" target="_blank" rel="noopener">Код на GitHub →</a>
+        </article>
+      </div>
+      <p class="disclaimer">Если вам нужно что-то похожее под ваш бизнес, соберу макет на ваших данных: название, прайс, часы работы, цвета.</p>
+    </section>
+
+    <section id="process" aria-labelledby="h-process">
+      <div class="sec-head">
+        <p class="label">Как работаю</p>
+        <h2 id="h-process">От задачи до запуска</h2>
+      </div>
+      <ol class="steps">
+        <li><h3>Бриф</h3><p>Вы рассказываете, что нужно, и присылаете примеры. Я задаю уточняющие вопросы.</p></li>
+        <li><h3>Договорённость</h3><p>Называю состав работ, срок и цену. Начинаем после вашего согласия.</p></li>
+        <li><h3>Разработка</h3><p>Показываю промежуточный результат, вы вносите правки до сдачи.</p></li>
+        <li><h3>Запуск</h3><p>Публикую сайт или бота, передаю доступы и исходники, объясняю, как пользоваться.</p></li>
+      </ol>
+    </section>
+
+    <section id="contact" aria-labelledby="h-contact">
+      <div class="contact">
+        <p class="label">Контакты</p>
+        <h2 id="h-contact">Расскажите о задаче, и я предложу решение</h2>
+        <div class="mailrow">
+          <span class="mail" id="mail">dropflac@gmail.com</span>
+          <button class="btn" type="button" id="copy">Скопировать адрес</button>
+          <span class="copied" id="copied" role="status"></span>
+        </div>
+        <p>В письме достаточно двух-трёх предложений: что за бизнес и что хотите получить. Срок и стоимость назову после короткого брифа.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Артур Дудуркаев · Begelua</span>
+    <span>Новый Уренгой</span>
+  </footer>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var mail = document.getElementById('mail'), note = document.getElementById('copied');
+  document.getElementById('copy').addEventListener('click', function () {
+    function done(ok) {
+      note.textContent = ok ? 'Скопировано' : 'Выделите адрес и скопируйте вручную';
+      if (!ok) { var r = document.createRange(); r.selectNodeContents(mail); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r); }
+      setTimeout(function () { note.textContent = ''; }, 2600);
+    }
+    try {
+      navigator.clipboard.writeText(mail.textContent).then(function () { done(true); }, function () { done(false); });
+    } catch (e) { done(false); }
+  });
+})();
+</script>
+</body>
+</html>

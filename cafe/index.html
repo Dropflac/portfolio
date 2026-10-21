@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Кафе «Тепло»</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Демо-лендинг кафе с меню и заказом на вынос.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,500;0,800;1,500&family=Alegreya+Sans:wght@400;500;700&display=swap">
+<style>
+/* Layout concept: плотный шафрановый первый экран с вращающимся «штампом», дальше меню-прайс и корзина на вынос.
+   Заказ собирается слева, итог и время получения справа. */
+:root {
+  --bg: #FBF8F6;
+  --surface: #FFFFFF;
+  --fg: #2A1608;
+  --muted: #6A5546;
+  --line: #E6DAD1;
+  --saffron: #F2A61D;
+  --saffron-fg: #2A1608;
+  --brand: #A8330F;
+  --brand-fg: #FFFFFF;
+  --band: #2A1608;
+  --band-fg: #FBEFD9;
+  --err: #B3261E;
+  --ok: #1F7A4D;
+  --busy: #8F7F73;
+  --display: "Alegreya", Georgia, "Times New Roman", serif;
+  --body: "Alegreya Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17110E; --surface: #211812; --fg: #F6EADB; --muted: #BBA595; --line: #3A2B22;
+    --saffron: #F2A61D; --saffron-fg: #2A1608; --brand: #FF9A6B; --brand-fg: #2A1608;
+    --band: #0F0A08; --band-fg: #FBEFD9; --err: #FF8A80; --ok: #5BC08A; --busy: #7C6A5D;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17110E; --surface: #211812; --fg: #F6EADB; --muted: #BBA595; --line: #3A2B22;
+  --saffron: #F2A61D; --saffron-fg: #2A1608; --brand: #FF9A6B; --brand-fg: #2A1608;
+  --band: #0F0A08; --band-fg: #FBEFD9; --err: #FF8A80; --ok: #5BC08A; --busy: #7C6A5D;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: auto; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 400 1.125rem/1.55 var(--body);
+  padding-block: 0 0;
+  -webkit-font-smoothing: antialiased;
+}
+.in { max-width: 1080px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* шапка и первый экран на шафрановой плашке */
+.hero-band { background: var(--saffron); color: var(--saffron-fg); }
+.top { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px 24px; padding-block: 20px; }
+.brand { font: 800 1.75rem/1 var(--display); text-decoration: none; letter-spacing: -.01em; }
+.top nav { display: flex; flex-wrap: wrap; gap: 6px 22px; font-size: 1rem; font-weight: 500; }
+.top nav a { text-decoration: none; padding-block: 4px; border-bottom: 2px solid transparent; }
+.top nav a:hover { border-color: currentColor; }
+.hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 32px 48px; align-items: center; padding-block: clamp(24px, 5vw, 56px) clamp(40px, 7vw, 84px); }
+.eyebrow { font: 700 .875rem/1.3 var(--body); letter-spacing: .12em; text-transform: uppercase; }
+.hero h1 { font: 800 clamp(2.3rem, 7vw, 4.6rem)/.98 var(--display); letter-spacing: -.02em; margin-top: 14px; }
+.hero h1 em { font-style: italic; font-weight: 500; }
+.hero .lead { margin-top: 20px; max-width: 40ch; font-size: 1.25rem; }
+.hero .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 0 26px;
+  border-radius: 999px; border: 2px solid var(--fg); background: transparent; color: var(--fg);
+  font: 700 1.0625rem/1 var(--body); text-decoration: none; cursor: pointer;
+}
+.hero .btn { border-color: var(--saffron-fg); color: var(--saffron-fg); }
+.hero .btn.dark { background: var(--saffron-fg); color: var(--saffron); }
+.btn.primary { background: var(--brand); border-color: var(--brand); color: var(--brand-fg); }
+.btn:hover:not([disabled]) { filter: brightness(1.1); }
+.btn[disabled] { opacity: .45; cursor: not-allowed; }
+.stamp { width: min(100%, 360px); justify-self: center; }
+.stamp svg { width: 100%; height: auto; display: block; overflow: visible; }
+.stamp .ring { transform-origin: 150px 150px; animation: turn 28s linear infinite; }
+.stamp text { font: 700 19px/1 var(--body); letter-spacing: .22em; fill: var(--saffron-fg); }
+.stamp .core { fill: var(--saffron-fg); }
+.stamp .t1 { font: 800 56px/1 var(--display); letter-spacing: 0; fill: var(--saffron); }
+.stamp .t2 { font: 500 17px/1 var(--body); letter-spacing: .08em; fill: var(--saffron); }
+@keyframes turn { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .stamp .ring { animation: none; } }
+
+.status { display: inline-flex; align-items: center; gap: 10px; margin-top: 26px; font-weight: 700; font-size: 1rem; }
+.status i { width: 10px; height: 10px; border-radius: 50%; background: var(--busy); flex: none; border: 2px solid var(--saffron-fg); }
+.status.open i { background: var(--ok); }
+
+section { padding-block: clamp(40px, 7vw, 80px); }
+.sec-head { display: grid; gap: 8px; margin-bottom: clamp(22px, 4vw, 36px); max-width: 60ch; }
+.sec-head h2 { font: 800 clamp(1.8rem, 4.4vw, 2.8rem)/1.05 var(--display); letter-spacing: -.01em; }
+.sec-head p { color: var(--muted); }
+.sec-head .eyebrow { color: var(--brand); }
+
+/* меню + корзина */
+.order { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.tab { font: 700 1rem/1 var(--body); padding: 12px 18px; border-radius: 999px; background: transparent; color: var(--fg); border: 1px solid var(--line); cursor: pointer; }
+.tab:hover { border-color: var(--fg); }
+.tab[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.menu { list-style: none; margin: 0; padding: 0; }
+.menu li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 20px; align-items: center; padding-block: 16px; border-bottom: 1px dotted var(--line); }
+.menu .name { font: 800 1.375rem/1.2 var(--display); }
+.menu .name small { font: 500 .8125rem/1 var(--body); letter-spacing: .08em; text-transform: uppercase; color: var(--brand); margin-left: 8px; }
+.menu .desc { grid-column: 1; color: var(--muted); font-size: 1rem; }
+.menu .side { grid-row: 1 / span 2; grid-column: 2; display: grid; justify-items: end; gap: 8px; }
+.menu .price { font: 700 1.25rem/1 var(--body); }
+.qty { display: inline-flex; align-items: center; border: 1px solid var(--fg); border-radius: 999px; overflow: hidden; }
+.qty button { width: 40px; height: 40px; border: 0; background: transparent; color: var(--fg); font: 700 1.25rem/1 var(--body); cursor: pointer; }
+.qty button:hover { background: var(--saffron); color: var(--saffron-fg); }
+.qty output { min-width: 28px; text-align: center; font: 700 1rem/1 var(--body); }
+.add { font: 700 .9375rem/1 var(--body); height: 40px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--fg); background: transparent; color: var(--fg); cursor: pointer; }
+.add:hover { background: var(--saffron); border-color: var(--saffron); color: var(--saffron-fg); }
+
+.cart { background: var(--surface); border: 2px solid var(--fg); border-radius: 14px; padding: 26px; display: grid; gap: 18px; min-width: 0; position: sticky; top: 16px; }
+.cart h3 { font: 800 1.5rem/1.1 var(--display); }
+.items { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-size: 1rem; }
+.items li { display: flex; justify-content: space-between; gap: 14px; }
+.items li span:last-child { white-space: nowrap; font-weight: 700; }
+.items .x { color: var(--muted); font-weight: 500; }
+.empty { color: var(--muted); }
+.sum { display: flex; justify-content: space-between; align-items: baseline; padding-top: 14px; border-top: 1px solid var(--line); font-weight: 700; }
+.sum output { font: 800 1.75rem/1 var(--display); }
+form { display: grid; gap: 12px; }
+.field { display: grid; gap: 6px; }
+.field label { font-size: .9375rem; color: var(--muted); }
+.field input, .field select { font: inherit; font-size: 1.0625rem; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-height: 48px; width: 100%; }
+.err { color: var(--err); font-size: 1rem; min-height: 1.2em; }
+.note { font-size: .9375rem; color: var(--muted); }
+.done { display: grid; gap: 12px; }
+.done .tick { font: 800 1.5rem/1.15 var(--display); }
+.done p { color: var(--muted); }
+
+/* о нас на тёмной плашке */
+.band { background: var(--band); color: var(--band-fg); }
+.band .sec-head p { color: var(--band-fg); opacity: .8; }
+.band .sec-head .eyebrow { color: var(--saffron); }
+.about { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 32px 48px; }
+.about h3 { font: 800 1.5rem/1.15 var(--display); margin-bottom: 8px; }
+.about p { opacity: .85; }
+.about .big { font: 800 3rem/1 var(--display); color: var(--saffron); margin-bottom: 8px; }
+
+.contacts { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 32px 56px; }
+.contacts h3 { font: 700 .875rem/1.3 var(--body); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.contacts .big { font: 800 1.5rem/1.3 var(--display); }
+.contacts p + p { margin-top: 6px; color: var(--muted); }
+.hours { display: grid; grid-template-columns: auto 1fr; gap: 6px 24px; margin: 0; }
+.hours dt { color: var(--muted); }
+.hours dd { margin: 0; font-weight: 700; }
+footer { background: var(--band); color: var(--band-fg); padding-block: 26px; font-size: .9375rem; }
+footer .in { display: grid; gap: 6px; }
+footer p { opacity: .8; }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: minmax(0, 1fr); }
+  .stamp { width: min(70%, 280px); justify-self: start; }
+  .order { grid-template-columns: minmax(0, 1fr); }
+  .cart { position: static; }
+}
+@media (max-width: 520px) {
+  .cart { padding: 20px; }
+  .menu .name small { display: block; margin: 4px 0 0; }
+}
+</style>
+</head>
+<body>
+<div class="hero-band">
+  <div class="in">
+    <header class="top">
+      <a class="brand" href="#top">Тепло</a>
+      <nav aria-label="Разделы">
+        <a href="#menu">Меню</a>
+        <a href="#about">О нас</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
+    </header>
+    <main id="top" class="hero">
+      <div>
+        <p class="eyebrow">Кафе · Новый Уренгой</p>
+        <h1>Горячий обед, <em>когда за окном</em> минус сорок</h1>
+        <p class="lead">Борщ, пельмени, оленина и пирожки из печи. Соберите заказ на сайте и заберите без очереди.</p>
+        <div class="actions">
+          <a class="btn dark" href="#menu">Собрать заказ</a>
+          <a class="btn" href="#contacts">Как добраться</a>
+        </div>
+        <p class="status" id="status"><i></i><span id="status-text"></span></p>
+      </div>
+      <div class="stamp" aria-hidden="true">
+        <svg viewBox="0 0 300 300">
+          <circle class="core" cx="150" cy="150" r="108"/>
+          <defs><path id="circ" d="M150,150 m-132,0 a132,132 0 1,1 264,0 a132,132 0 1,1 -264,0"/></defs>
+          <g class="ring"><text><textPath href="#circ" startOffset="0">ОБЕД · НА ВЫНОС · ВЫПЕЧКА · КОФЕ · ГОРЯЧЕЕ ·</textPath></text></g>
+          <text class="t1" x="150" y="160" text-anchor="middle">−40</text>
+          <text class="t2" x="150" y="192" text-anchor="middle">а у нас +22</text>
+        </svg>
+      </div>
+    </main>
+  </div>
+</div>
+
+<section id="menu" aria-labelledby="h-menu">
+  <div class="in">
+    <div class="sec-head">
+      <p class="eyebrow">Меню и заказ</p>
+      <h2 id="h-menu">Соберите заказ на вынос</h2>
+      <p>Добавляйте блюда, выберите время, и мы приготовим к назначенному часу.</p>
+    </div>
+    <div class="order">
+      <div>
+        <div class="tabs" id="tabs" role="group" aria-label="Разделы меню"></div>
+        <ul class="menu" id="menu-list"></ul>
+      </div>
+      <aside class="cart" aria-live="polite">
+        <h3>Ваш заказ</h3>
+        <ul class="items num" id="items"></ul>
+        <p class="sum"><span>Итого</span><output id="total" class="num"></output></p>
+        <form id="f" novalidate>
+          <div class="field"><label for="when">Время получения</label><select id="when"></select></div>
+          <div class="field"><label for="name">Ваше имя</label><input id="name" autocomplete="given-name" maxlength="40"></div>
+          <div class="field"><label for="phone">Телефон</label><input id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 900 000-00-00" maxlength="22"></div>
+          <p class="err" id="err" role="alert"></p>
+          <button class="btn primary" id="submit" type="submit" disabled>Оформить заказ</button>
+        </form>
+        <div class="done" id="ok" hidden>
+          <p class="tick" id="ok-title"></p>
+          <p id="ok-text"></p>
+          <button class="btn" id="again" type="button">Новый заказ</button>
+        </div>
+        <p class="note">Демо: заказ никуда не отправляется и оплата не списывается. В рабочем проекте заказ падает на кухню в Telegram и в таблицу учёта.</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<div class="band" id="about">
+  <section aria-labelledby="h-about">
+    <div class="in">
+      <div class="sec-head">
+        <p class="eyebrow">О нас</p>
+        <h2 id="h-about">Кормим по-северному</h2>
+      </div>
+      <div class="about">
+        <div><p class="big num">15 мин</p><h3>Заказ на вынос</h3><p>Собрали заказ на сайте и забрали с кассы без очереди, пока обед горячий.</p></div>
+        <div><p class="big">Печь</p><h3>Пирожки каждое утро</h3><p>Тесто ставим вечером, пекут с шести утра. К обеду свежее остаётся не всегда.</p></div>
+        <div><p class="big">Север</p><h3>Местные продукты</h3><p>Оленина, клюква, брусника и облепиха. Согревающее в меню даже летом.</p></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<section id="contacts" aria-labelledby="h-contacts">
+  <div class="in">
+    <div class="sec-head">
+      <p class="eyebrow">Заходите</p>
+      <h2 id="h-contacts">Контакты</h2>
+    </div>
+    <div class="contacts">
+      <div><h3>Адрес</h3><p class="big">г. Новый Уренгой, ул. Примерная, 1</p><p>Вход со стороны парковки.</p><h3 style="margin-top:24px">Телефон</h3><p class="big num">+7 (000) 000-00-00</p></div>
+      <div><h3>Часы работы</h3>
+        <dl class="hours num"><dt>Пн–Пт</dt><dd>8:00–20:00</dd><dt>Сб–Вс</dt><dd>10:00–18:00</dd></dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="in">
+    <p>Демо-проект: кафе, меню, цены и телефон вымышленные.</p>
+    <p>Сайт сделал Артур Дудуркаев (Begelua) — сайты, Telegram-боты и автоматизация для малого бизнеса.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var TZ = 'Asia/Yekaterinburg';
+  var CATS = [
+    { id: 'lunch',  t: 'Горячее' },
+    { id: 'break',  t: 'Завтраки' },
+    { id: 'bake',   t: 'Выпечка' },
+    { id: 'drinks', t: 'Напитки' }
+  ];
+  var DISHES = [
+    { id: 'borsch',  c: 'lunch',  t: 'Борщ с пампушками',        d: 'Говядина, сметана, чесночные пампушки',     p: 340, m: 'хит' },
+    { id: 'pelmeni', c: 'lunch',  t: 'Сибирские пельмени',       d: 'Говядина и свинина, сметана, укроп',        p: 380 },
+    { id: 'venison', c: 'lunch',  t: 'Оленина с гречкой',        d: 'Тушёная с луком и брусничным соусом',       p: 690, m: 'север' },
+    { id: 'kiev',    c: 'lunch',  t: 'Котлета с пюре',           d: 'Куриная котлета, картофельное пюре, огурец', p: 450 },
+    { id: 'syrniki', c: 'break',  t: 'Сырники со сгущёнкой',     d: 'Три штуки, сметана или варёная сгущёнка',   p: 290 },
+    { id: 'oat',     c: 'break',  t: 'Овсяная каша с ягодами',   d: 'На молоке, клюква, мёд',                    p: 220, m: 'север' },
+    { id: 'omelet',  c: 'break',  t: 'Омлет с ветчиной',         d: 'Три яйца, ветчина, сыр, тост',              p: 310 },
+    { id: 'pie-p',   c: 'bake',   t: 'Пирожок с картошкой',      d: 'Из печи, с жареным луком',                  p: 90 },
+    { id: 'pie-k',   c: 'bake',   t: 'Пирожок с капустой',       d: 'Из печи, с яйцом',                          p: 90 },
+    { id: 'vatr',    c: 'bake',   t: 'Ватрушка с творогом',      d: 'Песочное тесто, ванильный творог',          p: 130 },
+    { id: 'ecl',     c: 'bake',   t: 'Эклер',                    d: 'Заварной крем, шоколадная глазурь',         p: 160 },
+    { id: 'amer',    c: 'drinks', t: 'Американо',                d: '250 мл',                                    p: 160 },
+    { id: 'cap',     c: 'drinks', t: 'Капучино',                 d: '300 мл',                                    p: 220 },
+    { id: 'tea',     c: 'drinks', t: 'Чай с облепихой',          d: 'Чайник на двоих, имбирь, мёд',              p: 260, m: 'север' },
+    { id: 'mors',    c: 'drinks', t: 'Клюквенный морс',          d: 'Домашний, 300 мл',                          p: 140 }
+  ];
+  function $(id) { return document.getElementById(id); }
+  var nf = new Intl.NumberFormat('ru-RU');
+  function money(p) { return nf.format(p) + ' ₽'; }
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function hhmm(m) { return pad(Math.floor(m / 60)) + ':' + pad(m % 60); }
+
+  function nowTz() {
+    var o = {};
+    new Intl.DateTimeFormat('en-GB', { timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+      .formatToParts(new Date()).forEach(function (p) { o[p.type] = p.value; });
+    var wd = new Date(Date.UTC(+o.year, +o.month - 1, +o.day)).getUTCDay();   // 0 — воскресенье
+    return { h: +o.hour, mi: +o.minute, wd: wd };
+  }
+  function hoursFor(wd) { return (wd === 0 || wd === 6) ? { open: 600, close: 1080 } : { open: 480, close: 1200 }; }
+  var NOW = nowTz(), NOW_MIN = NOW.h * 60 + NOW.mi, H = hoursFor(NOW.wd);
+
+  // статус
+  var isOpen = NOW_MIN >= H.open && NOW_MIN < H.close;
+  $('status').classList.toggle('open', isOpen);
+  $('status-text').textContent = isOpen ? 'Открыто сейчас, до ' + hhmm(H.close)
+    : (NOW_MIN < H.open ? 'Сейчас закрыто, откроемся в ' + hhmm(H.open) : 'Сейчас закрыто, откроемся завтра');
+
+  // время получения
+  function pickupOptions() {
+    var opts = [], start, tomorrow = false;
+    if (NOW_MIN >= H.close) { tomorrow = true; start = hoursFor((NOW.wd + 1) % 7).open + 15; }
+    else { start = Math.max(NOW_MIN + 20, H.open + 15); }
+    start = Math.ceil(start / 15) * 15;
+    var close = tomorrow ? hoursFor((NOW.wd + 1) % 7).close : H.close;
+    for (var t = start; t <= close - 15 && opts.length < 10; t += 15) opts.push({ t: t, label: (tomorrow ? 'завтра, ' : '') + hhmm(t) });
+    if (!opts.length) return [];
+    if (!tomorrow && NOW_MIN >= H.open) opts.unshift({ t: -1, label: 'Как можно скорее (≈ 20 минут)' });
+    return opts;
+  }
+  var OPTS = pickupOptions();
+  $('when').innerHTML = OPTS.length ? OPTS.map(function (o, i) { return '<option value="' + i + '">' + o.label + '</option>'; }).join('') : '<option value="">нет свободного времени</option>';
+
+  var st = { cat: 'lunch', cart: {}, done: false };
+  function count() { return Object.keys(st.cart).reduce(function (a, k) { return a + st.cart[k]; }, 0); }
+  function dish(id) { return DISHES.filter(function (d) { return d.id === id; })[0]; }
+
+  function render() {
+    $('tabs').innerHTML = CATS.map(function (c) { return '<button type="button" class="tab" data-cat="' + c.id + '" aria-pressed="' + (st.cat === c.id) + '">' + c.t + '</button>'; }).join('');
+    $('menu-list').innerHTML = DISHES.filter(function (d) { return d.c === st.cat; }).map(function (d) {
+      var q = st.cart[d.id] || 0;
+      var ctl = q ? '<span class="qty"><button type="button" data-d="-1" data-id="' + d.id + '" aria-label="Убрать ' + d.t + '">−</button><output class="num">' + q + '</output><button type="button" data-d="1" data-id="' + d.id + '" aria-label="Добавить ' + d.t + '">+</button></span>'
+                  : '<button type="button" class="add" data-d="1" data-id="' + d.id + '" aria-label="Добавить ' + d.t + '">Добавить</button>';
+      return '<li><span class="name">' + d.t + (d.m ? '<small>' + d.m + '</small>' : '') + '</span><span class="desc">' + d.d + '</span><span class="side"><span class="price num">' + money(d.p) + '</span>' + ctl + '</span></li>';
+    }).join('');
+
+    var ids = Object.keys(st.cart).filter(function (k) { return st.cart[k] > 0; });
+    var total = 0;
+    $('items').innerHTML = ids.length ? ids.map(function (id) {
+      var d = dish(id), q = st.cart[id]; total += d.p * q;
+      return '<li><span>' + d.t + (q > 1 ? ' <span class="x">× ' + q + '</span>' : '') + '</span><span>' + money(d.p * q) + '</span></li>';
+    }).join('') : '<li class="empty">Пока пусто. Добавьте блюда из меню.</li>';
+    $('total').textContent = money(total);
+    $('submit').disabled = !ids.length || !OPTS.length;
+    $('f').hidden = st.done; $('ok').hidden = !st.done;
+  }
+
+  $('tabs').addEventListener('click', function (e) { var b = e.target.closest('[data-cat]'); if (!b) return; st.cat = b.dataset.cat; render(); });
+  $('menu-list').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-id]'); if (!b) return;
+    var id = b.dataset.id, d = +b.dataset.d;
+    st.cart[id] = Math.min(20, Math.max(0, (st.cart[id] || 0) + d));
+    render();
+    var again = document.querySelector('[data-id="' + id + '"]'); if (again) again.focus();
+  });
+
+  $('f').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = $('name').value.trim(), digits = $('phone').value.replace(/\D/g, '');
+    if (!name) { $('err').textContent = 'Укажите имя.'; $('name').focus(); return; }
+    if (digits.length < 10) { $('err').textContent = 'Проверьте номер телефона: нужно минимум 10 цифр.'; $('phone').focus(); return; }
+    $('err').textContent = '';
+    var o = OPTS[+$('when').value];
+    $('ok-title').textContent = 'Заказ принят, ' + name + '!';
+    $('ok-text').textContent = 'Получение: ' + (o.t < 0 ? 'примерно через 20 минут' : o.label) + '. Это демо: заказ никуда не отправлен.';
+    st.done = true; render();
+  });
+  $('again').addEventListener('click', function () { st.cart = {}; st.done = false; $('f').reset(); render(); $('menu').scrollIntoView({ block: 'start' }); });
+
+  render();
+})();
+</script>
+</body>
+</html>
