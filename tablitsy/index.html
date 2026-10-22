@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Умная таблица заказов: демо автоматизации</title>
+<meta name="description" content="Демо автоматизации Google Таблицы: учёт заказов, долги, просрочки, сводка и напоминания.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,500;0,600;1,500&display=swap">
+<style>
+:root{
+  --bg:#F5F3EF; --surface:#fff; --fg:#1B1712; --muted:#6B6358; --line:#E1DCD3;
+  --ink:#16120D; --ink2:#201A13; --am:#F2A33A; --am-d:#9A5A06; --gr:#1E8E3E; --ok:#1B7A4B; --err:#C0392B;
+  --display:"Lora",Georgia,serif; --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 1rem/1.55 var(--body);-webkit-font-smoothing:antialiased}
+.in{max-width:1120px;margin:0 auto;padding:0 20px}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.12;margin:0;letter-spacing:-.01em}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 22px;border-radius:10px;border:0;font:600 .95rem var(--body);cursor:pointer;background:var(--am);color:#2A1700;transition:transform .15s,box-shadow .15s;text-decoration:none}
+.btn:hover{transform:translateY(-1px);box-shadow:0 10px 24px -8px rgba(242,163,58,.7)}
+.btn.ghost{background:#fff;color:var(--fg);border:1px solid var(--line)}
+.btn.ghost:hover{box-shadow:none;border-color:var(--am)}
+:focus-visible{outline:3px solid var(--am);outline-offset:2px}
+
+.hero{background:radial-gradient(800px 480px at 90% 10%,rgba(242,163,58,.25),transparent 60%),linear-gradient(180deg,#1E1810,#16120D);color:#fff;padding:60px 0 64px}
+.hero .in{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+.eyebrow{font-size:.8rem;letter-spacing:.22em;text-transform:uppercase;color:var(--am);font-weight:600}
+.hero h1{font-size:clamp(2.1rem,4.6vw,3.3rem);margin:14px 0 16px}
+.hero h1 em{color:var(--am);font-style:italic}
+.hero p{color:#C9BFB0;font-size:1.08rem;max-width:32em;margin:0 0 24px}
+.hero ul{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+.hero li{display:flex;gap:12px;align-items:flex-start;color:#EDE4D6;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 16px}
+.hero li b{color:var(--am);font:600 1.1rem var(--display);min-width:22px}
+
+section{padding:56px 0}
+.sec-h{margin-bottom:24px}.sec-h h2{font-size:clamp(1.7rem,3.2vw,2.3rem)}
+.sec-h p{color:var(--muted);margin:8px 0 0;max-width:40em}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+.kpi span{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.kpi b{display:block;font:600 1.7rem var(--display);margin-top:4px}
+.kpi.warn b{color:var(--err)}.kpi.good b{color:var(--ok)}
+
+/* sheet */
+.sheet{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 24px 48px -28px rgba(22,18,13,.5)}
+.sheet .top{background:var(--gr);color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.sheet .top b{font-weight:600}.sheet .top small{opacity:.85}
+.tools{display:flex;gap:10px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid var(--line);background:#FAF8F4;align-items:center}
+.tools select{min-height:40px;border:1px solid #CFC8BB;border-radius:8px;padding:0 10px;font:inherit;background:#fff}
+.tools .sp{flex:1}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:860px;font-size:.84rem}
+th{background:#F1EEE8;font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);text-align:left;padding:10px 8px;border-bottom:1px solid var(--line);border-right:1px solid #E7E2D9;white-space:nowrap}
+td{padding:0 8px;height:44px;border-bottom:1px solid #EFEBE3;border-right:1px solid #F1EDE5;white-space:nowrap}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+td input[type=number]{width:82px;height:32px;border:1px solid transparent;border-radius:6px;padding:0 6px;font:inherit;text-align:right;background:transparent}
+td input[type=number]:hover{border-color:#CFC8BB}
+td input[type=number]:focus{border-color:var(--am);background:#FFFBF2}
+td select{height:32px;border:1px solid #CFC8BB;border-radius:999px;padding:0 10px;font:600 .8rem var(--body);cursor:pointer}
+tr.late td{background:#FFF1EE}
+tr.done td{color:#8A8174}
+.st-new{background:#E4ECFF;color:#1B3F8C}.st-work{background:#FFE9BE;color:#7A4B00}.st-done{background:#D5F0DF;color:#0F5A39}.st-pause{background:#ECE7DD;color:#5E564A}
+.flag{display:inline-block;padding:2px 9px;border-radius:999px;font-weight:600;font-size:.74rem}
+.flag.r{background:#FFD9D2;color:#9B2214}.flag.g{background:#EEF7F0;color:#1B7A4B}
+.debt{color:var(--err);font-weight:700}
+.sheet .foot{padding:12px 16px;font-size:.82rem;color:var(--muted);border-top:1px solid var(--line)}
+
+/* chart + log */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+.card h3{font-size:1.2rem;margin-bottom:14px}
+.bar{display:grid;grid-template-columns:90px 1fr 90px;gap:10px;align-items:center;margin-bottom:10px;font-size:.9rem}
+.bar i{display:block;height:16px;border-radius:8px;background:linear-gradient(90deg,var(--am),#F7C26E);min-width:2px;transition:width .35s}
+.bar span{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.log{font:.82rem/1.5 ui-monospace,Menlo,Consolas,monospace;background:#16120D;color:#CFE8D5;border-radius:10px;padding:14px;min-height:150px;max-height:210px;overflow:auto}
+.log div{margin-bottom:4px}.log .t{color:#8FA394}
+
+/* automation list */
+.list{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.list .card h3{font-size:1.1rem;margin-bottom:6px}.list .card p{margin:0;color:var(--muted);font-size:.95rem}
+.list .n{width:34px;height:34px;border-radius:10px;background:#FFEBCB;color:var(--am-d);display:grid;place-items:center;font:600 1rem var(--display);margin-bottom:10px}
+.cta{background:var(--ink);color:#fff;border-radius:18px;padding:36px;display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap}
+.cta h2{font-size:1.8rem}.cta p{margin:8px 0 0;color:#C9BFB0;max-width:32em}
+footer{padding:26px 0;color:var(--muted);font-size:.85rem}
+
+@media(max-width:860px){
+  .hero .in,.two,.list{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr 1fr}
+  .hero{padding:44px 0 48px}section{padding:40px 0}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="in">
+    <div>
+      <div class="eyebrow">Автоматизация Google Таблиц</div>
+      <h1>Таблица, которая <em>считает и напоминает сама</em></h1>
+      <p>Показываю на примере учёта заказов небольшой мастерской. Ниже рабочая демо-таблица: меняйте суммы и статусы и смотрите, как пересчитывается всё остальное.</p>
+      <a class="btn" href="#demo">Попробовать таблицу</a>
+    </div>
+    <ul>
+      <li><b>1</b><span>Остаток, долг и просрочка считаются автоматически</span></li>
+      <li><b>2</b><span>Сводка по деньгам и менеджерам обновляется на лету</span></li>
+      <li><b>3</b><span>Должникам уходят напоминания одной кнопкой</span></li>
+    </ul>
+  </div>
+</div>
+
+<main>
+<section id="demo">
+  <div class="in">
+    <div class="sec-h">
+      <h2>Учёт заказов мастерской</h2>
+      <p>Сегодня в демо 22.10.2026. Всё, что вы поменяете, считается в браузере, ничего не сохраняется.</p>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><span>Сумма заказов</span><b id="kSum">0</b></div>
+      <div class="kpi good"><span>Оплачено</span><b id="kPaid">0</b></div>
+      <div class="kpi warn"><span>Долг клиентов</span><b id="kDebt">0</b></div>
+      <div class="kpi warn"><span>Просрочено</span><b id="kLate">0</b></div>
+    </div>
+    <div class="sheet">
+      <div class="top"><b>Заказы · Google Таблица</b><small>формулы и статусы работают сами</small></div>
+      <div class="tools">
+        <label for="fSt" style="font-size:.85rem;color:var(--muted)">Показать:</label>
+        <select id="fSt" aria-label="Фильтр по статусу"><option value="">Все статусы</option><option>Новый</option><option>В работе</option><option>Готов</option><option>Пауза</option></select>
+        <select id="fMg" aria-label="Фильтр по менеджеру"><option value="">Все менеджеры</option></select>
+        <span class="sp"></span>
+        <button class="btn ghost" id="add" type="button">+ Добавить заказ</button>
+        <button class="btn" id="remind" type="button">Напомнить должникам</button>
+      </div>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>№</th><th>Клиент</th><th>Услуга</th><th>Менеджер</th><th>Срок</th><th style="text-align:right">Сумма</th><th style="text-align:right">Оплачено</th><th style="text-align:right">Остаток</th><th>Статус</th><th>Контроль</th></tr></thead>
+          <tbody id="body"></tbody>
+        </table>
+      </div>
+      <div class="foot">Остаток = сумма минус оплачено. Строка краснеет, если срок прошёл, а заказ не готов или не оплачен.</div>
+    </div>
+    <div class="two">
+      <div class="card"><h3>Выручка по менеджерам</h3><div id="chart"></div></div>
+      <div class="card"><h3>Журнал напоминаний</h3><div class="log" id="log" aria-live="polite"><div class="t">Нажмите «Напомнить должникам». Скрипт найдёт заказы с долгом и отправит письма.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="in">
+    <div class="sec-h"><h2>Что можно автоматизировать у вас</h2><p>Обычно хватает нескольких скриптов и аккуратных формул, без новых сервисов и подписок.</p></div>
+    <div class="list">
+      <div class="card"><div class="n">1</div><h3>Формулы и сводки</h3><p>Остатки, итоги, отчёты по менеджерам и месяцам считаются сами.</p></div>
+      <div class="card"><div class="n">2</div><h3>Уведомления</h3><p>Письмо клиенту или вам, когда срок подошёл или поменялся статус.</p></div>
+      <div class="card"><div class="n">3</div><h3>Сбор данных</h3><p>Заявки с сайта и из форм сами ложатся строками в нужный лист.</p></div>
+      <div class="card"><div class="n">4</div><h3>Порядок в данных</h3><p>Выпадающие списки, проверка ввода, защита формул от случайных правок.</p></div>
+      <div class="card"><div class="n">5</div><h3>Документы</h3><p>Счета и акты формируются из строки таблицы и сохраняются в PDF.</p></div>
+      <div class="card"><div class="n">6</div><h3>Инструкция</h3><p>Передаю короткую инструкцию, чтобы с таблицей работали ваши сотрудники.</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="in">
+    <div class="cta">
+      <div><h2>Покажите вашу таблицу</h2><p>Опишите, что сейчас делаете руками. Скажу, что из этого можно отдать автоматике и сколько это займёт.</p></div>
+      <a class="btn" href="#demo">Вернуться к таблице</a>
+    </div>
+  </div>
+</section>
+</main>
+<footer><div class="in">Демо-проект. Данные и компания вымышленные.</div></footer>
+
+<script>
+var TODAY = new Date(2026,9,22); // 22.10.2026
+var STAT = ["Новый","В работе","Готов","Пауза"];
+var CLS = {"Новый":"st-new","В работе":"st-work","Готов":"st-done","Пауза":"st-pause"};
+var rows = [
+  {id:101,cl:"ИП Сергеев",sv:"Изготовление вывески",mg:"Анна",due:"2026-10-18",sum:42000,paid:42000,st:"Готов",mail:"sergeev@example.com"},
+  {id:102,cl:"ООО «Альфа Строй»",sv:"Монтаж стеллажей",mg:"Игорь",due:"2026-10-20",sum:86500,paid:30000,st:"В работе",mail:"alfa@example.com"},
+  {id:103,cl:"Кафе «Уют»",sv:"Заказная мебель",mg:"Анна",due:"2026-10-30",sum:128000,paid:64000,st:"В работе",mail:"uyut@example.com"},
+  {id:104,cl:"Студия «Ритм»",sv:"Акустические панели",mg:"Мария",due:"2026-10-15",sum:54000,paid:0,st:"Новый",mail:"ritm@example.com"},
+  {id:105,cl:"ИП Орлова",sv:"Ремонт витрины",mg:"Игорь",due:"2026-11-05",sum:23500,paid:23500,st:"Готов",mail:"orlova@example.com"},
+  {id:106,cl:"Автосервис «Мотор»",sv:"Стойка ресепшн",mg:"Мария",due:"2026-11-12",sum:67000,paid:20000,st:"Пауза",mail:"motor@example.com"}
+];
+var nextId = 107;
+function fmt(n){ return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g," "); }
+function ruDate(s){ var p=s.split("-"); return p[2]+"."+p[1]+"."+p[0]; }
+function isLate(r){ return new Date(r.due) < TODAY && (r.st!=="Готов" || r.sum-r.paid>0); }
+
+function managers(){ var m=[]; rows.forEach(function(r){ if(m.indexOf(r.mg)<0) m.push(r.mg); }); return m; }
+function fillMg(){
+  var sel = document.getElementById("fMg"), cur = sel.value; sel.innerHTML = '<option value="">Все менеджеры</option>';
+  managers().forEach(function(m){ var o=document.createElement("option"); o.textContent=m; sel.appendChild(o); }); sel.value = cur;
+}
+function draw(){
+  var fs = document.getElementById("fSt").value, fm = document.getElementById("fMg").value;
+  var tb = document.getElementById("body"); tb.innerHTML = "";
+  rows.forEach(function(r,i){
+    if((fs && r.st!==fs) || (fm && r.mg!==fm)) return;
+    var rest = r.sum - r.paid, late = isLate(r), tr = document.createElement("tr");
+    tr.className = late ? "late" : (r.st==="Готов" && rest<=0 ? "done" : "");
+    tr.innerHTML = '<td>'+r.id+'</td><td></td><td></td><td></td><td></td><td class="num"><input type="number" min="0" step="500" aria-label="Сумма заказа '+r.id+'"></td><td class="num"><input type="number" min="0" step="500" aria-label="Оплачено по заказу '+r.id+'"></td><td class="num"></td><td></td><td></td>';
+    var c = tr.children;
+    c[1].textContent=r.cl; c[2].textContent=r.sv; c[3].textContent=r.mg; c[4].textContent=ruDate(r.due);
+    var i1=c[5].firstChild, i2=c[6].firstChild; i1.value=r.sum; i2.value=r.paid;
+    i1.onchange=function(){ r.sum=Math.max(0,+i1.value||0); update(); };
+    i2.onchange=function(){ r.paid=Math.max(0,+i2.value||0); update(); };
+    c[7].innerHTML = rest>0 ? '<span class="debt">'+fmt(rest)+'</span>' : '0';
+    var s=document.createElement("select"); s.className=CLS[r.st]; s.setAttribute("aria-label","Статус заказа "+r.id);
+    STAT.forEach(function(x){ var o=document.createElement("option"); o.textContent=x; if(x===r.st) o.selected=true; s.appendChild(o); });
+    s.onchange=function(){ r.st=s.value; update(); };
+    c[8].appendChild(s);
+    c[9].innerHTML = late ? '<span class="flag r">Просрочен</span>' : (rest>0 ? '<span class="flag" style="background:#FFF1D6;color:#7A4B00">Ждём оплату</span>' : '<span class="flag g">Ок</span>');
+    tb.appendChild(tr);
+  });
+}
+function kpi(){
+  var sum=0,paid=0,late=0; rows.forEach(function(r){ sum+=r.sum; paid+=Math.min(r.paid,r.sum); if(isLate(r)) late++; });
+  document.getElementById("kSum").textContent = fmt(sum)+" ₽";
+  document.getElementById("kPaid").textContent = fmt(paid)+" ₽";
+  document.getElementById("kDebt").textContent = fmt(Math.max(0,sum-paid))+" ₽";
+  document.getElementById("kLate").textContent = late;
+}
+function chart(){
+  var by = {}, max = 1; rows.forEach(function(r){ by[r.mg]=(by[r.mg]||0)+r.sum; });
+  Object.keys(by).forEach(function(k){ if(by[k]>max) max=by[k]; });
+  var el = document.getElementById("chart"); el.innerHTML = "";
+  Object.keys(by).sort(function(a,b){return by[b]-by[a]}).forEach(function(k){
+    var d=document.createElement("div"); d.className="bar";
+    d.innerHTML='<span style="text-align:left;font-weight:500"></span><div><i></i></div><span></span>';
+    d.children[0].textContent=k; d.querySelector("i").style.width=Math.round(by[k]/max*100)+"%"; d.children[2].textContent=fmt(by[k]);
+    el.appendChild(d);
+  });
+}
+function update(){ draw(); kpi(); chart(); fillMg(); }
+document.getElementById("fSt").onchange = draw;
+document.getElementById("fMg").onchange = draw;
+document.getElementById("add").onclick = function(){
+  var names=["ООО «Вектор»","ИП Лебедев","Салон «Лотос»","Школа «Старт»"], sv=["Монтаж освещения","Реклама на фасад","Мебель на заказ","Оформление зала"], mg=managers();
+  var k=nextId%4;
+  rows.push({id:nextId++,cl:names[k],sv:sv[k],mg:mg[k%mg.length],due:"2026-11-20",sum:30000+k*8000,paid:0,st:"Новый",mail:"client@example.com"});
+  update();
+};
+document.getElementById("remind").onclick = function(){
+  var log=document.getElementById("log"); log.innerHTML="";
+  var list = rows.filter(function(r){ return r.sum-r.paid>0 && r.st!=="Пауза"; });
+  function line(t,c){ var d=document.createElement("div"); d.innerHTML=c; log.appendChild(d); log.scrollTop=log.scrollHeight; }
+  line("", '<span class="t">22.10.2026 09:00</span> Запуск скрипта. Проверено заказов: '+rows.length);
+  if(!list.length){ line("", "Должников нет. Писать некому."); return; }
+  list.forEach(function(r,i){
+    setTimeout(function(){
+      var d=document.createElement("div");
+      d.textContent = "Письмо отправлено: "+r.mail+" · "+r.cl+" · долг "+fmt(r.sum-r.paid)+" ₽"+(isLate(r)?" (просрочка)":"");
+      log.appendChild(d); log.scrollTop=log.scrollHeight;
+      if(i===list.length-1){ var e=document.createElement("div"); e.innerHTML='<span class="t">Готово. Отправлено писем: '+list.length+'</span>'; log.appendChild(e); }
+    }, 350*(i+1));
+  });
+};
+update();
+</script>
+</body>
+</html>

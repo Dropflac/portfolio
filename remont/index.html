@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ФиксПоинт: ремонт телефонов</title>
+<meta name="description" content="Демо-лендинг сервиса по ремонту телефонов: прайс из Google Таблицы и заявки в таблицу.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,500;0,600;1,500&display=swap">
+<style>
+:root{
+  --bg:#F3F6FA; --surface:#fff; --fg:#0C1424; --muted:#56637A; --line:#DCE3EC;
+  --ink:#0B1220; --ink2:#111B2E; --cy:#3DD6E6; --cy-d:#0E93A3; --ok:#1B8A5A; --err:#C62F3B;
+  --display:"Lora",Georgia,serif; --body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 1rem/1.6 var(--body);-webkit-font-smoothing:antialiased}
+.in{max-width:1080px;margin:0 auto;padding:0 20px}
+a{color:inherit}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.12;margin:0;letter-spacing:-.01em}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 24px;border-radius:10px;border:0;font:600 1rem var(--body);cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.btn-cy{background:var(--cy);color:#04222A}
+.btn-cy:hover{transform:translateY(-1px);box-shadow:0 10px 24px -8px rgba(61,214,230,.7)}
+.btn-line{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.3)}
+.btn-line:hover{border-color:var(--cy);color:var(--cy)}
+:focus-visible{outline:3px solid var(--cy);outline-offset:2px}
+
+/* header */
+header{position:sticky;top:0;z-index:10;background:rgba(11,18,32,.92);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.08)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px;color:#fff}
+.logo{font:600 1.25rem var(--display);display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo i{width:28px;height:28px;border-radius:8px;background:var(--cy);display:grid;place-items:center}
+.logo i:after{content:"";width:10px;height:10px;border:2.5px solid #04222A;border-radius:50%}
+.nav nav{display:flex;gap:24px;font-size:.95rem;color:#B6C3D6}
+.nav nav a{text-decoration:none}.nav nav a:hover{color:#fff}
+.tel{font-weight:600;text-decoration:none;color:var(--cy)}
+
+/* hero */
+.hero{background:radial-gradient(900px 520px at 85% 20%,rgba(61,214,230,.22),transparent 60%),linear-gradient(180deg,#0E1830,#0B1220);color:#fff;padding:72px 0 80px;overflow:hidden}
+.hero .in{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+.eyebrow{font-size:.8rem;letter-spacing:.22em;text-transform:uppercase;color:var(--cy);font-weight:600}
+.hero h1{font-size:clamp(2.3rem,5vw,3.6rem);margin:16px 0 18px}
+.hero h1 em{color:var(--cy);font-style:italic}
+.hero p{color:#B6C3D6;font-size:1.125rem;max-width:30em;margin:0 0 28px}
+.hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+.facts{display:flex;gap:28px;margin-top:36px;flex-wrap:wrap}
+.facts b{display:block;font:600 1.7rem var(--display);color:#fff}
+.facts span{font-size:.85rem;color:#8FA0B8}
+.phone{justify-self:center;width:230px;height:440px;border-radius:38px;background:linear-gradient(160deg,#1A2742,#0F1830);border:2px solid rgba(255,255,255,.14);box-shadow:0 40px 80px -20px #000,0 0 90px rgba(61,214,230,.25);padding:14px;transform:rotate(6deg);position:relative}
+.screen{height:100%;border-radius:26px;background:linear-gradient(180deg,#0B1424,#13203A);padding:18px 14px;overflow:hidden;position:relative}
+.screen .st{display:flex;justify-content:space-between;font-size:.7rem;color:#8FA0B8}
+.crack{position:absolute;inset:0}
+.screen .fix{position:absolute;left:14px;right:14px;bottom:18px;background:var(--cy);color:#04222A;border-radius:14px;padding:14px;font-weight:600;font-size:.9rem}
+.screen .fix small{display:block;font-weight:500;opacity:.75;font-size:.75rem}
+
+/* sections */
+section{padding:72px 0}
+.sec-h{margin-bottom:34px}
+.sec-h h2{font-size:clamp(1.8rem,3.4vw,2.5rem)}
+.sec-h p{color:var(--muted);margin:10px 0 0;max-width:36em}
+
+/* price */
+.price-tools{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{min-height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font:500 .95rem var(--body);cursor:pointer;color:var(--fg)}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.search{flex:1;min-width:180px;min-height:40px;border-radius:10px;border:1px solid var(--line);padding:0 14px;font:inherit;background:var(--surface)}
+.sheet-note{font-size:.82rem;color:var(--muted);display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.sheet-note i{width:16px;height:16px;border-radius:3px;background:#1E8E3E;display:inline-block;position:relative}
+.sheet-note i:after{content:"";position:absolute;inset:4px;border:1.5px solid #fff;border-radius:1px}
+.table-wrap{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th,td{padding:14px 18px;text-align:left}
+th{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:#F8FAFC;border-bottom:1px solid var(--line)}
+td{border-bottom:1px solid #EAEFF5}
+tr:last-child td{border-bottom:0}
+td.p{font-weight:700;white-space:nowrap}
+td .t{color:var(--muted);font-size:.85rem}
+.empty{padding:26px;text-align:center;color:var(--muted)}
+
+/* adv & steps */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px}
+.card .ic{width:42px;height:42px;border-radius:12px;background:#E3F8FB;color:var(--cy-d);display:grid;place-items:center;font:700 1.1rem var(--display);margin-bottom:14px}
+.card h3{font-size:1.2rem;margin-bottom:6px}.card p{margin:0;color:var(--muted)}
+.steps{counter-reset:s;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.step{position:relative;padding-top:54px}
+.step:before{counter-increment:s;content:counter(s);position:absolute;top:0;left:0;width:40px;height:40px;border-radius:50%;background:var(--ink);color:var(--cy);display:grid;place-items:center;font:600 1.1rem var(--display)}
+.step h3{font-size:1.1rem;margin-bottom:4px}.step p{margin:0;color:var(--muted);font-size:.95rem}
+.band{background:var(--ink);color:#fff}
+.band .sec-h p{color:#8FA0B8}
+.rev{background:var(--ink2);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:24px}
+.rev p{margin:0 0 14px;color:#D2DBE8}
+.rev b{color:var(--cy)}.rev span{display:block;color:#8FA0B8;font-size:.85rem}
+.stars{color:var(--cy);letter-spacing:2px;margin-bottom:8px}
+
+/* form + live sheet */
+.form-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:28px;align-items:start}
+form{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px}
+label{display:block;font-weight:600;font-size:.9rem;margin:0 0 6px}
+.f{margin-bottom:16px}
+input[type=text],input[type=tel],select,textarea{width:100%;min-height:48px;border-radius:10px;border:1px solid #C4CFDD;padding:11px 14px;font:inherit;background:#fff;color:var(--fg)}
+textarea{min-height:92px;resize:vertical}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:var(--muted);margin-bottom:18px}
+.chk input{margin-top:4px;width:18px;height:18px}
+.err{color:var(--err);font-size:.82rem;margin-top:4px;min-height:1em}
+.bad{border-color:var(--err)!important}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.ok-msg{margin-top:14px;padding:14px;border-radius:10px;background:#E4F6EC;color:#0F5A39;font-weight:500}
+.live{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 20px 40px -24px rgba(11,18,32,.4)}
+.live .top{background:#1E8E3E;color:#fff;padding:12px 16px;font-weight:600;font-size:.9rem;display:flex;justify-content:space-between;align-items:center}
+.live .top small{font-weight:400;opacity:.85}
+.live .scroll{overflow-x:auto}
+.live table{font-size:.8rem;min-width:600px}.live td:nth-child(1),.live td:nth-child(3),.live td:nth-child(6){white-space:nowrap}
+.live th,.live td{padding:9px 9px;border-right:1px solid #EAEFF5}
+.live th{background:#F1F4F8;font-size:.7rem}
+.live tr.new td{animation:flash 1.6s}
+@keyframes flash{from{background:#FFF3B0}to{background:transparent}}
+.badge{display:inline-block;padding:2px 9px;border-radius:999px;background:#FFE9A8;color:#6A4A00;font-weight:600;font-size:.75rem}
+.live p{margin:0;padding:12px 16px;font-size:.82rem;color:var(--muted);border-top:1px solid #EAEFF5}
+
+/* contacts */
+.contacts{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:stretch}
+.map{border-radius:16px;min-height:260px;background:
+ linear-gradient(90deg,rgba(255,255,255,.5) 2px,transparent 2px) 0 0/48px 48px,
+ linear-gradient(rgba(255,255,255,.5) 2px,transparent 2px) 0 0/48px 48px,#CFE0E8;position:relative;border:1px solid var(--line)}
+.map:after{content:"";position:absolute;left:50%;top:50%;width:26px;height:26px;margin:-26px 0 0 -13px;border-radius:50% 50% 50% 0;background:var(--err);transform:rotate(-45deg);box-shadow:0 6px 14px rgba(0,0,0,.3)}
+.contacts dl{margin:0}.contacts dt{font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:16px}
+.contacts dd{margin:2px 0 0;font-weight:600;font-size:1.1rem}
+footer{background:var(--ink);color:#8FA0B8;padding:28px 0;font-size:.85rem}
+footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+@media(max-width:860px){
+  .nav nav{display:none}
+  .hero .in,.form-grid,.contacts{grid-template-columns:1fr}
+  .phone{display:none}
+  .grid3,.steps{grid-template-columns:1fr}
+  .hero{padding:48px 0 56px}
+  section{padding:52px 0}
+  th,td{padding:12px 12px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header>
+  <div class="in nav">
+    <a class="logo" href="#top"><i></i>ФиксПоинт</a>
+    <nav><a href="#price">Цены</a><a href="#why">Гарантия</a><a href="#how">Как мы работаем</a><a href="#reviews">Отзывы</a><a href="#order">Заявка</a></nav>
+    <a class="tel" href="tel:+78005550142">8 800 555-01-42</a>
+  </div>
+</header>
+
+<main id="top">
+<div class="hero">
+  <div class="in">
+    <div>
+      <div class="eyebrow">Сервис по ремонту телефонов</div>
+      <h1>Вернём телефон к жизни <em>за 30 минут</em></h1>
+      <p>Замена экрана, аккумулятора и разъёма с гарантией до года. Цены видны сразу, диагностика бесплатная.</p>
+      <div class="cta">
+        <a class="btn btn-cy" href="#order">Оставить заявку</a>
+        <a class="btn btn-line" href="#price">Смотреть цены</a>
+      </div>
+      <div class="facts">
+        <div><b>30 мин</b><span>замена экрана</span></div>
+        <div><b>12 мес</b><span>гарантия на работы</span></div>
+        <div><b>0 ₽</b><span>диагностика</span></div>
+      </div>
+    </div>
+    <div class="phone" aria-hidden="true">
+      <div class="screen">
+        <div class="st"><span>9:41</span><span>5G</span></div>
+        <svg class="crack" viewBox="0 0 200 400" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.2"><path d="M120 30 L96 120 L140 190 L90 260 L110 340"/><path d="M96 120 L40 150 L20 220"/><path d="M140 190 L190 210"/><path d="M90 260 L40 300"/></svg>
+        <div class="fix">Экран заменён<small>Готово за 30 минут</small></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="price">
+  <div class="in">
+    <div class="sec-h">
+      <h2>Прайс-лист</h2>
+      <p>Цены подтягиваются из Google Таблицы. Владелец правит цифры в таблице, и на сайте они меняются сами.</p>
+    </div>
+    <div class="price-tools">
+      <div class="chips" id="chips" role="group" aria-label="Бренд"></div>
+      <input class="search" id="q" type="search" placeholder="Найти услугу или модель" aria-label="Поиск по прайсу">
+    </div>
+    <div class="sheet-note"><i></i><span id="sheetNote">Данные из листа «Прайс»</span></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Устройство</th><th>Услуга</th><th>Срок</th><th>Цена</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div class="empty" id="empty" hidden>Ничего не найдено. Позвоните, подскажем по вашей модели.</div>
+    </div>
+  </div>
+</section>
+
+<section id="why" style="padding-top:0">
+  <div class="in">
+    <div class="sec-h"><h2>Почему к нам возвращаются</h2></div>
+    <div class="grid3">
+      <div class="card"><div class="ic">1</div><h3>Гарантия до 12 месяцев</h3><p>Письменный гарантийный талон на каждую работу.</p></div>
+      <div class="card"><div class="ic">2</div><h3>Оригинальные запчасти</h3><p>Покажем деталь до установки и назовём источник.</p></div>
+      <div class="card"><div class="ic">3</div><h3>Фиксированная цена</h3><p>Стоимость называем до начала ремонта и не меняем без вашего согласия.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="how" class="band">
+  <div class="in">
+    <div class="sec-h"><h2>Как проходит ремонт</h2><p>Четыре шага без сюрпризов.</p></div>
+    <div class="steps">
+      <div class="step"><h3>Заявка</h3><p>Оставляете заявку на сайте или звоните.</p></div>
+      <div class="step"><h3>Диагностика</h3><p>Находим причину и называем точную цену.</p></div>
+      <div class="step"><h3>Ремонт</h3><p>Чиним при вас или за пару часов.</p></div>
+      <div class="step"><h3>Гарантия</h3><p>Отдаём телефон и гарантийный талон.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="reviews">
+  <div class="in">
+    <div class="sec-h"><h2>Отзывы клиентов</h2></div>
+    <div class="grid3">
+      <div class="card"><div class="stars" style="color:var(--cy-d)">★★★★★</div><p style="color:var(--fg)">Разбил экран утром, к обеду забрал телефон. Цена совпала с прайсом, ничего не накрутили.</p><p style="margin-top:10px"><b>Андрей</b>, iPhone 13</p></div>
+      <div class="card"><div class="stars" style="color:var(--cy-d)">★★★★★</div><p style="color:var(--fg)">Менял аккумулятор, держится как новый. Дали талон на год.</p><p style="margin-top:10px"><b>Марина</b>, Samsung S22</p></div>
+      <div class="card"><div class="stars" style="color:var(--cy-d)">★★★★★</div><p style="color:var(--fg)">Телефон после воды считали мёртвым. Здесь вернули к жизни и сохранили фото.</p><p style="margin-top:10px"><b>Игорь</b>, Xiaomi 12</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="order" style="background:#E9EFF6">
+  <div class="in">
+    <div class="sec-h">
+      <h2>Заявка на ремонт</h2>
+      <p>Заполните форму: заявка сразу попадёт в таблицу мастерской. Справа видно, как это выглядит у владельца.</p>
+    </div>
+    <div class="form-grid">
+      <form id="form" novalidate>
+        <div class="f"><label for="name">Имя</label><input id="name" type="text" autocomplete="name" placeholder="Как к вам обращаться"><div class="err" data-for="name"></div></div>
+        <div class="f"><label for="phoneInp">Телефон</label><input id="phoneInp" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (___) ___-__-__"><div class="err" data-for="phoneInp"></div></div>
+        <div class="f"><label for="model">Модель устройства</label><input id="model" type="text" placeholder="Например, iPhone 13"><div class="err" data-for="model"></div></div>
+        <div class="f"><label for="issue">Что случилось</label><textarea id="issue" placeholder="Разбит экран, не заряжается..."></textarea></div>
+        <input class="hp" type="text" id="site" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="chk"><input type="checkbox" id="agree"><span>Согласен на обработку персональных данных</span></label>
+        <div class="err" data-for="agree" style="margin:-10px 0 12px"></div>
+        <button class="btn btn-cy" type="submit" style="width:100%">Отправить заявку</button>
+        <div class="ok-msg" id="okMsg" hidden>Заявка принята. Мы перезвоним в течение 15 минут.</div>
+      </form>
+      <div class="live" aria-live="polite">
+        <div class="top"><span>Заявки ремонта · Google Таблица</span><small>обновляется сразу</small></div>
+        <div class="scroll">
+          <table>
+            <thead><tr><th>Дата</th><th>Имя</th><th>Телефон</th><th>Модель</th><th>Проблема</th><th>Статус</th></tr></thead>
+            <tbody id="leads"></tbody>
+          </table>
+        </div>
+        <p>Так владелец видит заявки в своей таблице. Уведомление о новой заявке приходит ему на почту.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="in contacts">
+    <div>
+      <div class="sec-h"><h2>Контакты</h2></div>
+      <dl>
+        <dt>Адрес</dt><dd>г. Новосибирск, ул. Ленина, 45</dd>
+        <dt>Режим работы</dt><dd>Ежедневно, 10:00 до 20:00</dd>
+        <dt>Телефон</dt><dd><a href="tel:+78005550142" style="text-decoration:none">8 800 555-01-42</a></dd>
+      </dl>
+    </div>
+    <div class="map" role="img" aria-label="Карта: место на схеме"></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="in"><span>© ФиксПоинт. Демо-проект, компания вымышленная.</span><span>ИП Иванов И. И. · Политика конфиденциальности</span></div>
+</footer>
+
+<script>
+/* Прайс: в боевой версии читается из листа «Прайс» Google Таблицы.
+   Здесь стоит заглушка с теми же колонками (устройство, услуга, срок, цена). */
+var PRICE_SOURCE = null; // сюда вставляется адрес опубликованного листа (CSV) или веб-приложения Apps Script
+var PRICE_FALLBACK = [
+  ["iPhone","Замена экрана","30 минут",7900],
+  ["iPhone","Замена аккумулятора","20 минут",3200],
+  ["iPhone","Замена разъёма зарядки","1 час",2900],
+  ["iPhone","Ремонт после воды","1 день",3500],
+  ["Samsung","Замена экрана","40 минут",6900],
+  ["Samsung","Замена аккумулятора","20 минут",2800],
+  ["Samsung","Замена разъёма зарядки","1 час",2500],
+  ["Xiaomi","Замена экрана","30 минут",3900],
+  ["Xiaomi","Замена аккумулятора","20 минут",1900],
+  ["Xiaomi","Замена разъёма зарядки","1 час",1700],
+  ["Любой телефон","Диагностика","15 минут",0],
+  ["Любой телефон","Замена стекла камеры","30 минут",900]
+];
+var price = PRICE_FALLBACK, brand = "Все";
+
+function loadPrice(){
+  if(!PRICE_SOURCE){ render(); return; }
+  fetch(PRICE_SOURCE).then(function(r){return r.json()}).then(function(d){ price = d; render(); }).catch(function(){ render(); });
+}
+function rub(n){ return n===0 ? "Бесплатно" : n.toString().replace(/\B(?=(\d{3})+(?!\d))/g," ")+" ₽"; }
+function render(){
+  var brands = ["Все"]; price.forEach(function(r){ if(brands.indexOf(r[0])<0) brands.push(r[0]); });
+  var chips = document.getElementById("chips"); chips.innerHTML = "";
+  brands.forEach(function(b){
+    var el = document.createElement("button"); el.className="chip"; el.type="button"; el.textContent=b;
+    el.setAttribute("aria-pressed", b===brand); el.onclick=function(){ brand=b; render(); };
+    chips.appendChild(el);
+  });
+  var q = document.getElementById("q").value.trim().toLowerCase();
+  var list = price.filter(function(r){
+    return (brand==="Все"||r[0]===brand) && (!q || (r[0]+" "+r[1]).toLowerCase().indexOf(q)>=0);
+  });
+  var tb = document.getElementById("rows"); tb.innerHTML = "";
+  list.forEach(function(r){
+    var tr = document.createElement("tr");
+    tr.innerHTML = "<td></td><td></td><td class='t'></td><td class='p'></td>";
+    tr.children[0].textContent=r[0]; tr.children[1].textContent=r[1]; tr.children[2].textContent=r[2]; tr.children[3].textContent=rub(r[3]);
+    tb.appendChild(tr);
+  });
+  document.getElementById("empty").hidden = list.length>0;
+}
+document.getElementById("q").addEventListener("input", render);
+
+/* заявки */
+var leads = [
+  ["21.10.2026 10:42","Алексей","+7 913 555-20-18","iPhone 12","Не заряжается","Выполнена"],
+  ["21.10.2026 12:15","Светлана","+7 923 555-71-03","Samsung A54","Разбит экран","В работе"]
+];
+function pad(n){ return (n<10?"0":"")+n; }
+function drawLeads(newIdx){
+  var tb = document.getElementById("leads"); tb.innerHTML="";
+  leads.forEach(function(l,i){
+    var tr = document.createElement("tr"); if(i===newIdx) tr.className="new";
+    l.forEach(function(c,j){
+      var td = document.createElement("td");
+      if(j===5){ var b=document.createElement("span"); b.className="badge"; b.textContent=c; if(c==="Выполнена"){b.style.background="#D5F0DF";b.style.color="#0F5A39"} if(c==="В работе"){b.style.background="#D9E8FF";b.style.color="#123F86"} td.appendChild(b); }
+      else td.textContent=c;
+      tr.appendChild(td);
+    });
+    tb.appendChild(tr);
+  });
+}
+drawLeads(-1);
+
+var phone = document.getElementById("phoneInp");
+phone.addEventListener("input", function(){
+  var d = phone.value.replace(/\D/g,"");
+  if(d[0]==="8"||d[0]==="7") d=d.slice(1);
+  d = d.slice(0,10);
+  var s = "+7";
+  if(d.length>0) s += " ("+d.slice(0,3);
+  if(d.length>=3) s += ") "+d.slice(3,6);
+  if(d.length>=6) s += "-"+d.slice(6,8);
+  if(d.length>=8) s += "-"+d.slice(8,10);
+  phone.value = d.length? s : "";
+});
+function setErr(id,msg){
+  var e = document.querySelector('[data-for="'+id+'"]'); if(e) e.textContent = msg||"";
+  var f = document.getElementById(id); if(f && f.type!=="checkbox") f.classList.toggle("bad", !!msg);
+}
+document.getElementById("form").addEventListener("submit", function(ev){
+  ev.preventDefault();
+  if(document.getElementById("site").value) return; // honeypot
+  var name=document.getElementById("name").value.trim(), ph=phone.value, model=document.getElementById("model").value.trim(),
+      issue=document.getElementById("issue").value.trim(), ok=true;
+  setErr("name", name.length<2 ? "Введите имя" : ""); if(name.length<2) ok=false;
+  var digits = ph.replace(/\D/g,"");
+  setErr("phoneInp", digits.length<11 ? "Введите телефон полностью" : ""); if(digits.length<11) ok=false;
+  setErr("model", model.length<2 ? "Укажите модель" : ""); if(model.length<2) ok=false;
+  var ag = document.getElementById("agree").checked;
+  setErr("agree", ag ? "" : "Нужно согласие на обработку данных"); if(!ag) ok=false;
+  if(!ok) return;
+  var d = new Date();
+  leads.push([pad(d.getDate())+"."+pad(d.getMonth()+1)+"."+d.getFullYear()+" "+pad(d.getHours())+":"+pad(d.getMinutes()), name, ph, model, issue||"не указано", "Новая"]);
+  drawLeads(leads.length-1);
+  document.getElementById("okMsg").hidden = false;
+  this.reset();
+});
+loadPrice();
+</script>
+</body>
+</html>

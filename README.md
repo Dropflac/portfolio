@@ -13,6 +13,8 @@
 | Барбершоп «Северный» | Лендинг, прейскурант, онлайн-запись по свободным окнам | [открыть](https://dropflac.github.io/portfolio/barbershop/) |
 | Клининг «Порядок» | Лендинг, калькулятор стоимости, слайдер «до/после» | [открыть](https://dropflac.github.io/portfolio/cleaning/) |
 | Кафе «Тепло» | Меню, корзина, заказ на вынос с выбором времени | [открыть](https://dropflac.github.io/portfolio/cafe/) |
+| Сервис ремонта «ФиксПоинт» | Лендинг, прайс из Google Таблицы, заявки в таблицу, пример Apps Script | [открыть](https://dropflac.github.io/portfolio/remont/) |
+| Умная таблица заказов | Автоматический остаток, долг, просрочка, сводка и напоминания, пример Apps Script | [открыть](https://dropflac.github.io/portfolio/tablitsy/) |
 | Бот записи в барбершоп | Telegram-бот на Python (aiogram 3, SQLite), тесты | [код](https://github.com/Dropflac/barber-booking-bot) |
 
 Все страницы статические: HTML, CSS и JavaScript без сборки и зависимостей.

@@ -110,6 +110,10 @@ section { border-top: 1px solid var(--line); padding-block: clamp(40px, 7vw, 80p
 .th-clean::after { content: ""; position: absolute; right: -30px; bottom: -30px; width: 150px; height: 150px; border-radius: 50%; background: #1D6B50; }
 .th-cafe { background: #F2A61D; color: #2A1608; }
 .th-cafe::after { content: ""; position: absolute; right: 20px; top: 50%; width: 112px; height: 112px; margin-top: -56px; border-radius: 50%; background: #2A1608; }
+.th-fix { background: #0B1424; color: #E7F4F7; }
+.th-fix::after { content: ""; position: absolute; right: 26px; top: 50%; width: 64px; height: 108px; margin-top: -54px; border-radius: 14px; border: 3px solid #3DD6E6; background: #13203A; }
+.th-sheet { background: #F5EFE4; color: #2A1700; }
+.th-sheet::after { content: ""; position: absolute; right: 22px; top: 50%; width: 120px; height: 84px; margin-top: -42px; border-radius: 6px; background: repeating-linear-gradient(#fff 0 20px, #1E8E3E 20px 22px), #fff; border: 2px solid #1E8E3E; }
 .th-bot { background: #1C2128; color: #ECEEF2; }
 .th-bot::before { content: ""; position: absolute; right: 22px; top: 22px; width: 120px; height: 34px; border-radius: 14px 14px 14px 3px; background: #3D4654; }
 .th-bot::after { content: ""; position: absolute; right: 22px; top: 66px; width: 90px; height: 34px; border-radius: 14px 14px 3px 14px; background: #8CA0FF; }
@@ -223,6 +227,20 @@ footer { border-top: 1px solid var(--line); padding-block: 22px 6px; font: 400 .
           <p>Меню по разделам, корзина и заказ на вынос с выбором времени получения. Время и статус «открыто» считаются по часам работы.</p>
           <p class="tags"><span>HTML / CSS / JS</span><span>корзина</span><span>адаптив</span></p>
           <a class="go" href="https://dropflac.github.io/portfolio/cafe/" target="_blank" rel="noopener">Открыть демо →</a>
+        </article>
+        <article class="work">
+          <div class="thumb th-fix" aria-hidden="true"><span class="s">Лендинг · Google Таблица</span><span class="t">Сервис ремонта<br>«ФиксПоинт»</span></div>
+          <h3>Сервис ремонта телефонов</h3>
+          <p>Лендинг, где прайс читается из Google Таблицы, а заявки с формы падают в неё строками. Владелец сам меняет цены и видит новые заявки, уведомление идёт на почту.</p>
+          <p class="tags"><span>HTML / CSS / JS</span><span>Apps Script</span><span>адаптив</span></p>
+          <a class="go" href="https://dropflac.github.io/portfolio/remont/" target="_blank" rel="noopener">Открыть демо →</a>
+        </article>
+        <article class="work">
+          <div class="thumb th-sheet" aria-hidden="true"><span class="s">Автоматизация таблиц</span><span class="t">Учёт заказов<br>в таблице</span></div>
+          <h3>Умная таблица заказов</h3>
+          <p>Остаток, долг и просрочка считаются сами, сводка по менеджерам обновляется на лету, должникам уходят напоминания одной кнопкой. Рядом пример скриптов Apps Script.</p>
+          <p class="tags"><span>Google Таблицы</span><span>Apps Script</span><span>формулы</span></p>
+          <a class="go" href="https://dropflac.github.io/portfolio/tablitsy/" target="_blank" rel="noopener">Открыть демо →</a>
         </article>
         <article class="work">
           <div class="thumb th-bot" aria-hidden="true"><span class="s">Telegram-бот</span><span class="t">Запись<br>в барбершоп</span></div>
